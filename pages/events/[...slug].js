@@ -1,16 +1,22 @@
-import { useRouter } from "next/router";
-import { getFilteredEvents } from "dummyData";
+import { getFilteredEvents } from "utils/api-utils";
 import EventList from "components/events/event-list";
 
-const FilteredEvent = () => {
-  const { query } = useRouter();
-
-  if (!query.slug) {
-    return <p>Loading..</p>;
+const FilteredEvent = ({ event, error }) => {
+  if (error) {
+    return <p>Not found..</p>;
   }
 
-  const year = query.slug[0];
-  const month = query.slug[1];
+  return (
+    <div>
+      <EventList eventItems={event} />
+    </div>
+  );
+};
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const year = params.slug[0];
+  const month = params.slug[1];
 
   if (
     isNaN(+year) ||
@@ -19,23 +25,31 @@ const FilteredEvent = () => {
     +month < 1 ||
     +month > 12
   ) {
-    return <p>Invalid Filter conditions</p>;
+    return {
+      props: {
+        error: "Not Found",
+      },
+    };
   }
 
-  const filteredEvents = getFilteredEvents({
+  const events = await getFilteredEvents({
     year: +year,
     month: +month,
   });
 
-  if (!filteredEvents || filteredEvents.length === 0) {
-    return <p>No event found for choosen filter</p>;
+  if (!events) {
+    return {
+      props: {
+        error: "Invalid Filter",
+      },
+    };
   }
 
-  return (
-    <div>
-      <EventList eventItems={filteredEvents} />
-    </div>
-  );
-};
+  return {
+    props: {
+      event: events,
+    },
+  };
+}
 
 export default FilteredEvent;
