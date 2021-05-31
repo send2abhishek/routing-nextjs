@@ -1,9 +1,14 @@
+import Head from "next/head";
 import { getFeaturedEvent } from "utils/api-utils";
 import EventList from "components/events/event-list";
 
 const Home = ({ events }) => {
   return (
     <div>
+      <Head>
+        <title>Featured Events</title>
+        <meta name="description" content="All Events" />
+      </Head>
       <EventList eventItems={events} />
     </div>
   );
