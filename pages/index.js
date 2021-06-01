@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { getFeaturedEvent } from "utils/api-utils";
 import EventList from "components/events/event-list";
+import NewsLetter from "components/input/newsletter-registration";
 
 const Home = ({ events }) => {
   return (
@@ -9,6 +10,7 @@ const Home = ({ events }) => {
         <title>Featured Events</title>
         <meta name="description" content="All Events" />
       </Head>
+      <NewsLetter />
       <EventList eventItems={events} />
     </div>
   );

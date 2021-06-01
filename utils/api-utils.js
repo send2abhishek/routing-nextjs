@@ -44,3 +44,34 @@ export async function getFilteredEvents(dateFilter) {
 
   return filteredEvents;
 }
+
+export async function handleEmailRegistrationRequest(email) {
+  const response = await fetch("/api/newsletters", {
+    method: "POST",
+    body: JSON.stringify({
+      email: email,
+    }),
+
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  return response.json();
+}
+export async function addCommentToDb(commentData, id) {
+  const response = await fetch(`/api/comments/${id}`, {
+    method: "POST",
+    body: JSON.stringify(commentData),
+
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
+  return response.json();
+}
+export async function getCommentFromDb(id) {
+  const response = await fetch(`/api/comments/${id}`, {
+    method: "GET",
+  });
+  return response.json();
+}
